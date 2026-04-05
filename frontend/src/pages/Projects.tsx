@@ -91,12 +91,10 @@ export default function Projects() {
                 {/* Image Container */}
                 <div className="aspect-[16/10] w-full bg-muted border-b border-border/50 flex items-center justify-center overflow-hidden relative">
                    {project.image_url ? (
-                     <img src={project.image_url} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out grayscale group-hover:grayscale-0 opacity-80 group-hover:opacity-100" />
+                     <img src={project.image_url} alt={project.title} className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-in-out shadow-sm" />
                    ) : (
                      <FolderGit2 className="w-16 h-16 text-primary/30 group-hover:text-primary transition-colors duration-500" />
                    )}
-                   {/* Gradient Overlay */}
-                   <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent opacity-60 group-hover:opacity-20 transition-opacity duration-300" />
                 </div>
 
                 {/* Content Container */}

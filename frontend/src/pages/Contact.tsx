@@ -3,8 +3,6 @@ import { useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import { Mail, MapPin, Link as LinkIcon, Share2, Send } from 'lucide-react'
 import { Button } from '../components/ui/Button'
-import emailjs from '@emailjs/browser'
-
 interface ContactFormInputs {
   name: string
   email: string
@@ -21,43 +19,37 @@ export default function Contact() {
 
   const onSubmit = async (data: ContactFormInputs) => {
     setStatus('loading')
-    setErrorMessage('') // Reset error state on new submit
+    setErrorMessage('')
     
     try {
-      console.log('--- STARTING EMAILJS REQUEST ---')
-      const payload = {
-        user_name: data.name,
-        user_email: data.email,
-        message: data.message,
+      // @ts-ignore
+      if (typeof window.Email === 'undefined') {
+        throw new Error('SMTP.js is not loaded.')
       }
-      console.log('Payload Data:', payload)
 
-      const serviceId = "service_ubtnv46"
-      const templateId = "template_iyrc2af"
-      const publicKey = "COpmo251cKIxg1b-M"
-
-      // Send email directly using explicit configured values
-      const response = await emailjs.send(
-        serviceId,      
-        templateId,     
-        payload,
-        publicKey       
-      )
+      // @ts-ignore
+      const response = await window.Email.send({
+        SecureToken: "YOUR_SECURE_TOKEN_HERE", // IMPORTANT: Replace with your actual SecureToken from smtpjs.com
+        To: 'nidhi14a@gmail.com',
+        From: "nidhi14a@gmail.com", // SMTP.js requires From to be an authorized email configured with your SecureToken
+        Subject: "New Contact Message",
+        Body: `
+          <h3>New Contact Message</h3>
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>Email:</strong> ${data.email}</p>
+          <p><strong>Message:</strong><br/> ${data.message.replace(/\n/g, '<br/>')}</p>
+        `
+      })
       
-      console.log('--- EMAILJS SUCCESS RESPONSE ---')
-      console.log('Response Status:', response.status)
-      console.log('Response Text:', response.text)
-      console.log('Full Response Object:', response)
-      
-      setStatus('success')
-      reset()
+      if (response === 'OK') {
+        setStatus('success')
+        reset()
+      } else {
+        throw new Error(response)
+      }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.error('--- EMAILJS ERROR ENCOUNTERED ---')
-      console.error('Root Cause / Full Error Object:', err)
-      if (err.text) console.error('Error Text Details:', err.text)
-      if (err.status) console.error('Error HTTP Status:', err.status)
-      
+      console.error('SMTPJS Error:', err)
       setErrorMessage('Failed to send message. Please try again later.')
       setStatus('error')
     }
