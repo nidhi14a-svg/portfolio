@@ -1,26 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, ChevronRight, Terminal, Code2, Cpu } from 'lucide-react'
 import { Button } from '../components/ui/Button'
 import { Link } from 'react-router-dom'
-import { ApiServices } from '../api/api'
 import nidhiPhoto from '../assets/profile1.jpeg'
 
 export default function Home() {
-  const [settings, setSettings] = useState<Record<string, string>>({});
+  const [settings] = useState<Record<string, string>>({});
   
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await ApiServices.getPortfolioData();
-        setSettings(res.data.settings || {});
-      } catch (e) {
-        console.error("Failed to load portfolio data", e);
-      }
-    };
-    fetchData();
-  }, []);
-
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.2, delayChildren: 0.1 } }

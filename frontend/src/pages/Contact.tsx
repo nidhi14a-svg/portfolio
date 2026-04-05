@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { motion } from 'framer-motion'
 import { Mail, MapPin, Link as LinkIcon, Share2, Send } from 'lucide-react'
 import { Button } from '../components/ui/Button'
-import { ApiServices } from '../api/api'
 import emailjs from '@emailjs/browser'
 
 interface ContactFormInputs {
@@ -14,44 +13,52 @@ interface ContactFormInputs {
 
 export default function Contact() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const [settings, setSettings] = useState<Record<string, string>>({})
+  const [settings] = useState<Record<string, string>>({})
   const { register, handleSubmit, reset, formState: { errors } } = useForm<ContactFormInputs>()
 
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const res = await ApiServices.getPortfolioData()
-        setSettings(res.data.settings || {})
-      } catch (e) { console.error(e) }
-    }
-    fetchSettings()
-  }, [])
+
+  const [errorMessage, setErrorMessage] = useState('Failed to send message. Please try again later.')
 
   const onSubmit = async (data: ContactFormInputs) => {
     setStatus('loading')
+    setErrorMessage('') // Reset error state on new submit
+    
     try {
-      // Send email directly using EmailJS
-      await emailjs.send(
-        // 1. Paste your Service ID here (Starts with 'service_')
-        'YOUR_SERVICE_ID',      
-        
-        // 2. Paste your Template ID here (Starts with 'template_')
-        'YOUR_TEMPLATE_ID',     
-        
-        {
-          user_name: data.name,
-          user_email: data.email,
-          message: data.message,
-        },
-        
-        // 3. Paste your Public Key here (Found in EmailJS Account Settings)
-        'YOUR_PUBLIC_KEY'       
+      console.log('--- STARTING EMAILJS REQUEST ---')
+      const payload = {
+        user_name: data.name,
+        user_email: data.email,
+        message: data.message,
+      }
+      console.log('Payload Data:', payload)
+
+      const serviceId = "service_ubtnv46"
+      const templateId = "template_iyrc2af"
+      const publicKey = "COpmo251cKIxg1b-M"
+
+      // Send email directly using explicit configured values
+      const response = await emailjs.send(
+        serviceId,      
+        templateId,     
+        payload,
+        publicKey       
       )
+      
+      console.log('--- EMAILJS SUCCESS RESPONSE ---')
+      console.log('Response Status:', response.status)
+      console.log('Response Text:', response.text)
+      console.log('Full Response Object:', response)
       
       setStatus('success')
       reset()
-    } catch (err) {
-      console.error("Failed to send message:", err)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      console.error('--- EMAILJS ERROR ENCOUNTERED ---')
+      console.error('Root Cause / Full Error Object:', err)
+      if (err.text) console.error('Error Text Details:', err.text)
+      if (err.status) console.error('Error HTTP Status:', err.status)
+      
+      setErrorMessage('Failed to send message. Please try again later.')
       setStatus('error')
     }
   }
@@ -156,7 +163,7 @@ export default function Contact() {
               </div>
 
               {status === 'error' && (
-                 <p className="text-red-500 text-sm text-center">Failed to send message. Please try again later.</p>
+                 <p className="text-red-500 text-sm text-center">{errorMessage}</p>
               )}
 
               <Button type="submit" className="w-full gap-2 py-6 text-lg" disabled={status === 'loading'}>

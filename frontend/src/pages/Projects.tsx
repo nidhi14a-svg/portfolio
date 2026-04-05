@@ -5,7 +5,7 @@ import { Button } from '../components/ui/Button'
 import todoImg from "../assets/todo.jpeg";
 import weatherImg from "../assets/weather.jpeg";
 import clockImg from "../assets/clock.jpeg";
-
+import schImg from "../assets/sch.jpeg";
 interface Project {
   id: number
   title: string
@@ -19,7 +19,18 @@ interface Project {
 export default function Projects() {
   const [projects] = useState<Project[]>([
     {
+      
       id: 1,
+      title: "scholar_connect",
+      description: "Scholar Connect is a collaborative web application built to bridge the gap between students and academic opportunities. It allows users to connect, share knowledge, explore scholarships/internships, and engage in a community-driven learning environment.",
+      tech_stack: ["HTML", "CSS", "JavaScript"],
+      image_url: schImg,
+      github_url: "https://github.com/nidhi14a-svg/scholar_connect",
+      live_url: "https://scholar-connect-six.vercel.app/"
+    },
+    {
+
+      id: 2,
       title: "To-Do List Application",
       description: "Created a simple and interactive to-do list web app that allows users to add, delete, and manage daily tasks efficiently. This project focuses on DOM manipulation, event handling, and basic data persistence concepts, helping improve productivity through a clean and intuitive interface.",
       tech_stack: ["HTML", "CSS", "JavaScript"],
@@ -28,7 +39,7 @@ export default function Projects() {
       live_url: "https://todo-red-ten-28.vercel.app"
     },
     {
-      id: 2,
+      id: 3,
       title: "Weather Website",
       description: "Developed a dynamic weather web application that fetches real-time weather data using a public API. The application allows users to search for any location and displays key details such as temperature, humidity, and weather conditions. This project helped me understand API integration, asynchronous JavaScript, and handling real-time data in a user-friendly interface.",
       tech_stack: ["HTML", "CSS", "JavaScript", "API Integration"],
@@ -37,7 +48,7 @@ export default function Projects() {
       live_url: "https://weather-app-omega-one-24.vercel.app"
     },
     {
-      id: 3,
+      id: 4,
       title: "Real-Time Clock",
       description: "Built a real-time digital clock using JavaScript that continuously updates to display the current system time.",
       tech_stack: ["HTML", "CSS", "JavaScript"],

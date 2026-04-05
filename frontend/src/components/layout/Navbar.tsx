@@ -3,13 +3,11 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { Button } from '../ui/Button'
-import { ApiServices } from '../../api/api'
-
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const location = useLocation()
-  const [siteName, setSiteName] = useState('DevPort')
+  const siteName = 'DevPort'
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,13 +15,6 @@ export function Navbar() {
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  useEffect(() => {
-    // Optionally fetch naming globally, or stick to DevPort if empty
-    ApiServices.getPortfolioData().then(res => {
-      if (res.data.settings?.name) setSiteName(res.data.settings.name.split(' ')[0]) // Get first name or brand
-    }).catch()
   }, [])
 
   const navLinks = [

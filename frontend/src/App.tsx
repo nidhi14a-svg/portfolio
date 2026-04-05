@@ -7,7 +7,6 @@ import Home from './pages/Home'
 import Projects from './pages/Projects'
 import Gallery from './pages/Gallery'
 import Contact from './pages/Contact'
-import AdminLogin from './pages/AdminLogin'
 
 function App() {
   const { theme } = useThemeStore()
@@ -28,7 +27,6 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/gallery" element={<Gallery />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/admin" element={<AdminLogin />} />
           </Routes>
         </main>
         
