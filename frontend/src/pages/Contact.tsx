@@ -7,6 +7,7 @@ interface ContactFormInputs {
   name: string
   email: string
   message: string
+  phone?: string
 }
 
 export default function Contact() {
@@ -22,34 +23,24 @@ export default function Contact() {
     setErrorMessage('')
     
     try {
-      // @ts-ignore
-      if (typeof window.Email === 'undefined') {
-        throw new Error('SMTP.js is not loaded.')
-      }
-
-      // @ts-ignore
-      const response = await window.Email.send({
-        SecureToken: "YOUR_SECURE_TOKEN_HERE", // IMPORTANT: Replace with your actual SecureToken from smtpjs.com
-        To: 'nidhi14a@gmail.com',
-        From: "nidhi14a@gmail.com", // SMTP.js requires From to be an authorized email configured with your SecureToken
-        Subject: "New Contact Message",
-        Body: `
-          <h3>New Contact Message</h3>
-          <p><strong>Name:</strong> ${data.name}</p>
-          <p><strong>Email:</strong> ${data.email}</p>
-          <p><strong>Message:</strong><br/> ${data.message.replace(/\n/g, '<br/>')}</p>
-        `
+      const response = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       })
       
-      if (response === 'OK') {
+      const result = await response.json()
+      
+      if (result.success) {
         setStatus('success')
         reset()
       } else {
-        throw new Error(response)
+        throw new Error(result.error || 'Failed to send message')
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      console.error('SMTPJS Error:', err)
+      console.error('Error sending message:', err)
       setErrorMessage('Failed to send message. Please try again later.')
       setStatus('error')
     }
@@ -142,6 +133,16 @@ export default function Contact() {
                    placeholder="john@example.com"
                  />
                  {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+              </div>
+
+              <div>
+                 <label htmlFor="phone" className="block text-sm font-medium mb-2 text-foreground">Phone (Optional)</label>
+                 <input 
+                   type="tel"
+                   {...register('phone')}
+                   className={`w-full bg-background border border-border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all`}
+                   placeholder="+1 (555) 000-0000"
+                 />
               </div>
 
               <div>
