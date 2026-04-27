@@ -18,6 +18,7 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/api/contact', async (req, res) => {
+  console.log("Incoming data:", req.body);
   const { name, email, phone, message } = req.body;
 
   if (!name || !email || !message) {

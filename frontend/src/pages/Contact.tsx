@@ -23,7 +23,7 @@ export default function Contact() {
     setErrorMessage('')
     
     try {
-      const response = await fetch('http://localhost:5000/api/contact', {
+      const response = await fetch('https://portfoliobackend-yl0b.onrender.com/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
